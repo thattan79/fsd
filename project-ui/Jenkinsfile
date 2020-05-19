@@ -1,0 +1,22 @@
+jenkinsPipeLine {
+
+   stage('Step 1 : Git Checkout') {
+     git credentialsId: 'Dtp@1611', url: 'https://github.com/thattan79/fsd.git'
+     echo 'Done : Git checkout'
+   }
+
+   stage('Step 2 : Build Image') {
+      sh 'docker build -t thattan79/project-ui-":$BUILD_NUMBER"'
+   }
+
+   stage('Step 3 : Deliver Image') {
+	   	withCredentials([string(credentialsId: 'docker-pwd', variable: 'DockerPwd')]) {
+	    	sh "docker login -u thattan79 -p ${DockerPwd}"
+		}
+   		sh 'docker push thattan79/project-ui-":$BUILD_NUMBER"'
+   }
+
+   stage('Step 4 : Run Image') {
+      sh 'docker run --rm -d -p 8085:80/tcp --name project-ui-":$BUILD_NUMBER" project-ui-":$BUILD_NUMBER":latest'
+   }
+}

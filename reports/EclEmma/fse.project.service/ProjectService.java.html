@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ProjectService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-service</a> &gt; <a href="index.source.html" class="el_package">fse.project.service</a> &gt; <span class="el_source">ProjectService.java</span></div><h1>ProjectService.java</h1><pre class="source lang-java linenums">package fse.project.service;
+
+import fse.project.model.Project;
+import fse.project.model.Task;
+import fse.project.model.User;
+import fse.project.repository.ProjectRepository;
+import fse.project.repository.TaskRepository;
+import fse.project.repository.UserRepository;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+
+@Service
+<span class="fc" id="L19">public class ProjectService {</span>
+
+    @Resource
+    private ProjectRepository projectRepository;
+
+    @Resource
+    private UserRepository userRepository;
+
+    @Resource
+    private TaskRepository taskRepository;
+
+    public List&lt;Project&gt; findAllProjects() {
+<span class="fc" id="L31">        return projectRepository.findAll();</span>
+    }
+
+    public List&lt;Project&gt; findAllProjectsWithTasksCount() {
+<span class="fc" id="L35">        final List&lt;Project&gt; projects = new ArrayList&lt;&gt;();</span>
+<span class="pc bpc" id="L36" title="2 of 4 branches missed.">        final Predicate&lt;Task&gt; isCompleted = ct -&gt; ct.getEndDate() != null &amp;&amp; ct.getEndDate().before(new Date());</span>
+<span class="fc" id="L37">        projectRepository.findAll().forEach(p -&gt; {</span>
+<span class="fc" id="L38">            final Project project = new Project();</span>
+<span class="fc" id="L39">            project.setId(p.getId());</span>
+<span class="fc" id="L40">            project.setProject(p.getProject());</span>
+<span class="fc" id="L41">            project.setStartDate(p.getStartDate());</span>
+<span class="fc" id="L42">            project.setEndDate(p.getEndDate());</span>
+<span class="fc" id="L43">            project.setPriority(p.getPriority());</span>
+<span class="fc" id="L44">            List&lt;Task&gt; noOfTasks = retrieveTasksByProject(p);</span>
+<span class="fc" id="L45">            project.setCountOfTasks(noOfTasks.size());</span>
+<span class="fc" id="L46">            project.setCountOfCompletedTasks(noOfTasks.stream().filter(isCompleted).count());</span>
+<span class="fc" id="L47">            projects.add(project);</span>
+<span class="fc" id="L48">        });</span>
+
+<span class="fc" id="L50">        return projects;</span>
+    }
+
+    public Project findById(final long projectId) {
+<span class="fc" id="L54">        Optional&lt;Project&gt; project = projectRepository.findById(projectId);</span>
+<span class="fc" id="L55">        return project.orElse(null);</span>
+    }
+
+    public void addProject(final Project project) {
+<span class="pc bpc" id="L59" title="1 of 2 branches missed.">        if (project != null) {</span>
+<span class="fc" id="L60">            projectRepository.save(project);</span>
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">            if (project.getManagerId() != null) {</span>
+<span class="fc" id="L62">                Optional&lt;User&gt; optUser = userRepository.findById(project.getManagerId());</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">                if (optUser.isPresent()) {</span>
+<span class="fc" id="L64">                    User user = optUser.get();</span>
+<span class="fc" id="L65">                    user.setProject(project);</span>
+<span class="fc" id="L66">                    userRepository.save(user);</span>
+                }
+            }
+        }
+<span class="fc" id="L70">    }</span>
+
+    public void updateProject(final Project project) {
+<span class="fc" id="L73">        addProject(project);</span>
+<span class="fc" id="L74">    }</span>
+
+    public void endProject(final long id) {
+<span class="fc" id="L77">        final Optional&lt;Project&gt; optProject = projectRepository.findById(id);</span>
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">        if (optProject.isPresent()) {</span>
+<span class="fc" id="L79">            Project project = optProject.get();</span>
+<span class="fc" id="L80">            project.setEndDate(new Date());</span>
+<span class="fc" id="L81">            projectRepository.save(project);</span>
+        }
+<span class="fc" id="L83">    }</span>
+
+    private List&lt;Task&gt; retrieveTasksByProject(final Project project) {
+<span class="fc" id="L86">        return taskRepository.findByProject(project);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

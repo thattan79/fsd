@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TaskController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">project-service</a> &gt; <a href="index.source.html" class="el_package">fse.project.controllers</a> &gt; <span class="el_source">TaskController.java</span></div><h1>TaskController.java</h1><pre class="source lang-java linenums">package fse.project.controllers;
+
+import fse.project.model.Task;
+import fse.project.service.TaskService;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import java.util.List;
+
+@CrossOrigin
+@RestController
+<span class="fc" id="L12">public class TaskController {</span>
+
+    @Resource
+    private TaskService taskService;
+
+    @GetMapping(&quot;/alltasks&quot;)
+    public List&lt;Task&gt; findAllTasks() {
+<span class="fc" id="L19">        return taskService.findAllTasks();</span>
+    }
+
+    @GetMapping(&quot;/task/{id}&quot;)
+    public Task findTask(@PathVariable(value = &quot;id&quot;) Long id) {
+<span class="fc" id="L24">        return taskService.findById(id);</span>
+    }
+
+    @PutMapping(&quot;/task/{id}&quot;)
+    public void updateTask(@PathVariable(value = &quot;id&quot;) Long id, @RequestBody Task task) {
+<span class="fc" id="L29">        task.setId(id);</span>
+<span class="fc" id="L30">        taskService.updateTask(task);</span>
+<span class="fc" id="L31">    }</span>
+
+    @DeleteMapping(&quot;/task/{id}&quot;)
+    public void deleteTask(@PathVariable(value = &quot;id&quot;) Long id) {
+<span class="fc" id="L35">        taskService.deleteTask(id);</span>
+<span class="fc" id="L36">    }</span>
+
+    @PostMapping(&quot;/task&quot;)
+    public void addTask(@RequestBody Task task) {
+<span class="fc" id="L40">        taskService.addTask(task);</span>
+<span class="fc" id="L41">    }</span>
+
+    @GetMapping(path = &quot;/task/project/{id}&quot;)
+    public List&lt;Task&gt; findTaskByProject(@PathVariable Long id) {
+<span class="fc" id="L45">        return taskService.findTaskByProject(id);</span>
+    }
+
+    @PutMapping(path = &quot;/endtask/{id}&quot;)
+    public void endTask(@PathVariable Long id) {
+<span class="fc" id="L50">        taskService.endTask(id);</span>
+<span class="fc" id="L51">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

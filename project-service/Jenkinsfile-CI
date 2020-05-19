@@ -1,0 +1,23 @@
+jenkinsCIPipeLine {
+
+  triggers {
+        pollSCM('H/5 * * * *')
+    }
+
+   stage('Step 1 : Git Checkout') {
+     cleanUp()
+     checkout scm
+     echo 'Done : Git checkout'
+   }
+
+   stage('Step 2 : Build') {
+      sh 'mvn clean install'
+   }
+}
+
+   private void cleanUp() {
+      sh 'rm -rf *'
+      sh 'rm -rf .git'
+   }
+
+

@@ -1,0 +1,13 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+project-service,fse.project.model,User,4,62,0,0,0,9,1,13,1,13
+project-service,fse.project.model,Project,0,86,0,0,0,11,0,18,0,18
+project-service,fse.project.model,Task,4,92,0,0,0,12,1,19,1,19
+project-service,fse.project.model,ParentTask,12,14,0,0,2,3,2,4,2,4
+project-service,fse.project,ProjectTasksApplication,5,3,0,0,2,1,1,1,1,1
+project-service,fse.project,ProjectTasksException,0,4,0,0,0,2,0,1,0,1
+project-service,fse.project.controllers,UserController,0,41,0,0,0,11,0,8,0,8
+project-service,fse.project.controllers,TaskController,0,45,0,0,0,13,0,8,0,8
+project-service,fse.project.controllers,ProjectController,0,33,0,0,0,10,0,7,0,7
+project-service,fse.project.service,TaskService,0,169,3,9,0,39,3,13,0,10
+project-service,fse.project.service,UserService,0,119,2,8,0,25,2,14,0,11
+project-service,fse.project.service,ProjectService,1,157,5,7,0,37,5,11,0,10
